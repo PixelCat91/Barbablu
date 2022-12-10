@@ -1,0 +1,34 @@
+#include<iostream>
+#include<algorithm>
+
+int main(){
+
+	using namespace std;
+
+	string frase1{NULL};
+
+	cout << "Inserisci la parola o la frase: ";
+
+	cin >> frase1;
+
+	auto iteratore1 = remove_if(frase1.begin(), frase1.end(), ::isspace);
+
+		frase1.erase(iteratore1, frase1.end());
+
+	auto iteratore2 = remove_if(frase1.begin(), frase1.end(), ::ispunct);
+
+		frase1.erase(iteratore2, frase1.end());
+
+	string frase2 = frase1;
+
+	reverse(frase2.begin(), frase2.end());
+
+	if(frase1 == frase2){
+		cout << "è palindroma";
+	}else{
+		cout << "non è palindroma";
+	}
+
+	return 0;
+}
+
