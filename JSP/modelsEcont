@@ -1,0 +1,99 @@
+package it.cefi.models;
+
+import java.util.Arrays;
+
+public class Isogramma {
+
+	private String parola;
+	
+	public Isogramma() {
+		
+	}
+	
+	public String getParola() {
+		return parola;
+	}
+
+	public void setParola(String parola) {
+		this.parola = parola;
+	}
+	
+	public boolean controlloIsogramma(String stringa) {
+		
+		stringa = stringa.toLowerCase();
+		int lunghezza = stringa.length();
+		
+		char arr[] = stringa.toCharArray();
+		
+		Arrays.sort(arr);
+		for(int i = 0; i < lunghezza - 1; i++) {
+			if(arr[i] == arr[i + 1])
+				return false;
+		}
+		return true;
+	}
+
+	
+}
+------------------------------------------------------------------------
+package it.cefi.controllers;
+
+import java.io.IOException;
+
+import it.cefi.models.Isogramma;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/controlla")
+public class IsogrammaServlet extends HttpServlet{
+
+	private static final long serialVersionUID = 1L;
+
+	private Isogramma isogramma = new Isogramma();
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		super.doPost(req, resp);
+		
+		RequestDispatcher requestDispatcher = req.getRequestDispatcher("index.jsp");
+		
+		String parola = new String();
+		
+		parola = req.getParameter("frase");
+		
+		if(isogramma.controlloIsogramma(parola)) {
+			req.setAttribute("risposta", parola + "è un isogramma");
+		} else {
+			req.setAttribute("risposta", parola + "non è un isogramma");
+		}
+		
+		requestDispatcher.forward(req, resp);
+	}
+}
+-----------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<title>Isogramma</title>
+</head>
+<body>
+	<form action="controlla" method="post">
+		<div align="center">
+			<h1>Verifica Isogramma</h1>
+			<label>Inserisci la frase</label>
+			<input type="text" name="frase">
+			<input type="submit" name="Verifica" value="Verifica">
+		</div>
+		<div align="center">
+			<% if(request.getAttribute("risposta") != null) {%>
+			<p><%= request.getAttribute("risposta") %>
+			<% } %>
+		</div>
+	</form>
+</body>
+</html>
